@@ -2,20 +2,28 @@ class Solution {
 public:
     int lengthOfLongestSubstring(string s) {
         int size = (int)s.size(), mx = 0;
+        set<char> st;
+        deque<char> dq;
         for(int i = 0; i < size; ++i) {
-            set<char> st;
-            int count = 0;
-            for(int j = i; j < size; ++j) {
-                if(st.find(s[j]) != st.end()) {
-                    int count = (int)st.size();
-                    mx = (mx < count ? count : mx);
-                    break;
+            if(st.find(s[i]) == st.end()) {
+                st.insert(s[i]);
+                dq.push_back(s[i]);
+            } else {
+                while(true) {
+                    char f = dq.front();
+                    dq.pop_front();
+                    st.erase(f);
+                    if(f == s[i])
+                        break;
                 }
-                st.insert(s[j]);
+                st.insert(s[i]);
+                dq.push_back(s[i]);
             }
-            if(mx < (int)st.size())
-                mx = (int)st.size();
+            
+            if(mx < (int)dq.size())
+                mx = (int)dq.size();
         }
+        
         return mx;
     }
 };
